@@ -53,6 +53,23 @@ header{
   background: #7EC8E3;
   border-radius: 100%;
   border: 3px solid #fff;
+  z-index: 0;
+}
+
+@keyframes fadeIn {
+  0% {opacity: 0%;}
+  85% {opacity: 100%;}
+  100% {opacity: 0%;}
+}
+
+.circle-flash{
+  width: 90px;
+  height: 90px;
+  opacity: 0%;
+  background: red;
+  border: 3px solid white;
+  animation: fadeIn 1s;
+  z-index: 1;
 }
 
 .flex-container{
