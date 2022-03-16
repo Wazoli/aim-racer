@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Target from "./Target";
 
-const { io } = require("socket.io-client");
-
 export default function Trainer(props) {
-    const [socket, setSocket] = useState(io());
     const [targetEls, setTargetEls] = useState([]);
     const [targets, setTargets] = useState([]);
     const [lastTarget, setLastTarget] = useState(-1);
@@ -96,12 +93,6 @@ export default function Trainer(props) {
     useEffect(() => {
         setTargets((prev) => prev.filter((x) => x !== lastTarget));
     }, [lastTarget]);
-
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log('oho');
-        });
-    }, []);
 
     return (
         <div onClick={targetMissed} className="trainer-container">
