@@ -7,7 +7,7 @@ body {
 header{
   border-bottom: 1px #050A30 solid;
   width: 60%;
-  margin: 0 auto 50px;
+  margin: 0 auto 15px;
 }
 
 .header-items{
@@ -28,8 +28,8 @@ header{
 }
 
 .header-menu:hover{
-  background-color: #0000FF;
-  color: #7EC8E3;
+  background-color: #7EC8E3;
+  color: #050A30;
   cursor: pointer;
 }
 
@@ -139,4 +139,27 @@ header{
 
 .num-targets-title{
   margin-top: 100px;
+}
+
+.progress-outer{
+  width : 65%;
+  height: 15px;
+  background : #7EC8E3;
+  margin : 0 auto;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.progress-inner{
+  border-radius: 10px;
+  height: 15px;
+  background: #000C66;
+}
+
+.progress-outer.player-2{
+  background: #000C66;
+}
+
+.progress-inner.player-2{
+  background : #7EC8E3;
 }

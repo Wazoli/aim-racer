@@ -17,8 +17,9 @@ io.on('connection', (socket) => {
     socket.join(roomNo)
     roomAllocation[socket.id] = roomNo;
     socket.on('scoreUpdate', (data) => {
-        socket.broadcast.to(roomAllocation[socket.id]).emit('serverScoreUpdate', data)
+        socket.broadcast.to(roomAllocation[socket.id]).emit('opponentScoreUpdate', data)
     })
+    playerCount++
 })
 
 server.listen(4000, () => {

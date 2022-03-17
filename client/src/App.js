@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Trainer from "./components/Trainer";
 import Header from "./components/Header";
 import Menu from './components/Menu';
+import ProgressBar from "./components/ProgressBar";
 
 const { io } = require("socket.io-client");
 
@@ -14,10 +15,7 @@ function App() {
     const [numTargets, setNumTargets] = useState(5)
     const [targetSize, setTargetSize] = useState(50)
     const [socket, setSocket] = useState();
-    const [quarterUpdate, setQuarterUpdate] = useState(false)
-    const [halfUpdate, setHalfUpdate] = useState(false)
-    const [threeQuarterUpdate, setThreeQuarterUpdate] = useState(false)
-    const [gameOverUpdate, setGameOverUpdate] = useState(false)
+    const [opponentScore, setOpponentScore] = useState()
 
     useEffect(() => {
         setSocket(io('http://localhost:4000/'))
@@ -28,46 +26,34 @@ function App() {
             socket.on('connect', (data) => {
                 console.log('hello')
             })
-            socket.on('serverScoreUpdate', (data) =>{
-                alert('they are ' + data.update + ' way through')
+            socket.on('opponentScoreUpdate', (data) =>{
+                setOpponentScore(data.score)
             })
         }
     }, [socket]);
 
     useEffect(() => {
-        if(score > 2500 && !quarterUpdate){
-            setQuarterUpdate(true)
+        if(score && socket){
+            socket.emit('scoreUpdate', {score : score})
         }
-        if(score > 5000 && !halfUpdate){
-            setHalfUpdate(true)
-        }
-        if(score > 7500 && !threeQuarterUpdate){
-            setThreeQuarterUpdate(true)
-        }
-        if(score > 10000 && !gameOverUpdate){
-            setGameOverUpdate(true)
-        }
+    }, [score, socket])
 
-    }, [score])
-
-    useEffect(() => {
-        if(quarterUpdate){
-            socket.emit('scoreUpdate', {update : 'quarter'})
+    useEffect(()=>{
+        if(score > 10000){
+            setScore(0)
+            alert('game over, you win :)')
         }
-        if(halfUpdate){
-            socket.emit('scoreUpdate', {update : 'half'})
+        else if(opponentScore > 10000){
+            setScore(0)
+            alert('game over, you lose :(')
         }
-        if(threeQuarterUpdate){
-            socket.emit('scoreUpdate', {update : 'threeQuarter'})
-        }
-        if(gameOverUpdate){
-            socket.emit('scoreUpdate', {update : 'gameOver'})
-        }
-    }, [quarterUpdate, halfUpdate, threeQuarterUpdate, gameOverUpdate])
+    }, [score, opponentScore])
 
     return (
         <div className="App">
             <Header setShowMenu = {setShowMenu} missCount = {missCount} score = {score} streakCount = {streakCount} />
+            <ProgressBar player = {1} score = {score} />
+            <ProgressBar player = {2} score = {opponentScore}/>
             <main className = 'flex-container main'>
                 <Trainer score = {score} numTargets = {numTargets} targetSize = {targetSize} setMissCount = {setMissCount} setScore = {setScore} setStreakCount = {setStreakCount}/>
                 {showMenu && <Menu numTargets = {numTargets} setNumTargets = {setNumTargets} targetSize = {targetSize} setTargetSize = {setTargetSize} />}

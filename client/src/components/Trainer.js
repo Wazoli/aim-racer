@@ -130,24 +130,31 @@ export default function Trainer(props) {
     useEffect(() => {
         let random = Math.random();
         if(targets.length === props.numTargets - 1){
-            if (random < 0) {
+            if (random < 0.1 && !flashEl) {
                 watchYourEyes();
             }
         }
-    }, [targets, props.numTargets]);
+    }, [targets, props.numTargets, flashEl]);
     
     useEffect(()=>{
         if(flashEl){
             setTimeout(()=>{
+                //if mouse on grid when flash pops
                 if(document.getElementById('trainer-container').classList[0] === 'true'){
                     document.getElementById('flash-filter').classList.toggle('flash-filter')
+                    setFlashEl(undefined)
+                }
+                else{
+                    setTimeout(()=>{
+                        setFlashEl(undefined)
+                    }, flashCircleDuration - flashPopDelay)
                 }
             }, flashPopDelay)
             setTimeout(()=>{
+                //flash plays through
                 if(document.getElementById('flash-filter').classList[0] == 'flash-filter'){
                     document.getElementById('flash-filter').classList.toggle('flash-filter')
                 }
-                setFlashEl(undefined)
             }, flashDuration)
         }
     }, [flashEl])
