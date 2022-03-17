@@ -5,6 +5,9 @@ import Flash from "./Flash";
 const totalGridNum = 7 * 13;
 const numRows = 7;
 const numCols = 13;
+const flashPopDelay = 570 //ms
+const flashDuration = 2000 //ms
+const flashCircleDuration = 750 //ms
 
 export default function Trainer(props) {
     const [targetEls, setTargetEls] = useState([]);
@@ -12,6 +15,8 @@ export default function Trainer(props) {
     const [lastTarget, setLastTarget] = useState(-1);
     const [visibilities, setVisibilities] = useState([]);
     const [flashEl, setFlashEl] = useState();
+    const [mouseOnGrid, setMouseOnGrid] = useState(true)
+    const [flashFilterEl, setFlashFilterEl] = useState(undefined)
 
     function targetClicked(e) {
         let id = parseInt(e.target.classList[0]);
@@ -124,26 +129,36 @@ export default function Trainer(props) {
 
     useEffect(() => {
         let random = Math.random();
-        if(targets.length === props.numTargets)
-        if (random < 0.1 && !flashEl) {
-            watchYourEyes();
+        if(targets.length === props.numTargets - 1){
+            if (random < 0) {
+                watchYourEyes();
+            }
         }
     }, [targets, props.numTargets]);
-
+    
     useEffect(()=>{
         if(flashEl){
-            setTimeout(() => {
+            setTimeout(()=>{
+                if(document.getElementById('trainer-container').classList[0] === 'true'){
+                    document.getElementById('flash-filter').classList.toggle('flash-filter')
+                }
+            }, flashPopDelay)
+            setTimeout(()=>{
+                if(document.getElementById('flash-filter').classList[0] == 'flash-filter'){
+                    document.getElementById('flash-filter').classList.toggle('flash-filter')
+                }
                 setFlashEl(undefined)
-            }, 2000)
+            }, flashDuration)
         }
     }, [flashEl])
 
     return (
-        <div onClick={targetMissed} className="trainer-container">
-            <div className="trainer">
+        <div onMouseEnter = {(()=>setMouseOnGrid(true))} onMouseLeave = {(()=>setMouseOnGrid(false))} onClick={targetMissed} id = 'trainer-container' className={`${mouseOnGrid} trainer-container`}>
+            <div  id = 'trainer-grid' className="trainer">
                 {targetEls}
                 {flashEl}
             </div>
+            <div id = 'flash-filter'></div>
         </div>
     );
 }

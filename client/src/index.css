@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Roboto Slab', sans-serif;
-  background: #7EC8E3;
+  background: #d4d4d4;
 }
 
 header{
@@ -36,6 +36,8 @@ header{
 .trainer-container{
   margin: 0 auto;
   cursor: crosshair;
+  display: flex;
+  flex-direction: column;
 }
 
 .trainer{
@@ -49,6 +51,21 @@ header{
   border-radius: 50px;
 }
 
+@keyframes flash{
+  from{opacity: 100%;}
+  to{opacity: 0%;}
+}
+
+.flash-filter{
+  z-index: 3;
+  position: absolute;
+  width: 1340px;
+  height: 740px;
+  background-color: white;
+  border-radius: 50px;
+  animation: flash 2s;
+}
+
 .circle{
   background: #7EC8E3;
   border-radius: 100%;
@@ -58,8 +75,9 @@ header{
 
 @keyframes fadeIn {
   0% {opacity: 0%;}
-  85% {opacity: 100%;}
-  100% {opacity: 0%;}
+  75% {opacity: 75%;}
+  76% {opacity: 100%; background-color: white;}
+  100%{opacity: 0%; background-color: transparent;}
 }
 
 .circle-flash{
@@ -68,7 +86,7 @@ header{
   opacity: 0%;
   background: red;
   border: 3px solid white;
-  animation: fadeIn 1s;
+  animation: fadeIn 0.75s;
   z-index: 1;
 }
 

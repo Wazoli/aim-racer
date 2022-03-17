@@ -4,8 +4,7 @@ const http = require("http");
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
+        origin: "http://localhost:3000"
     }
 });
 
@@ -14,7 +13,7 @@ let roomAllocation = {};
 
 io.on('connection', (socket) => {
     console.log(playerCount + ' joined')
-    roomNo = Math.round(playerCount/2)
+    roomNo = Math.floor(playerCount/2)
     socket.join(roomNo)
     roomAllocation[socket.id] = roomNo;
     socket.on('scoreUpdate', (data) => {
