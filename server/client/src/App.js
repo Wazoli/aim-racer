@@ -16,9 +16,13 @@ function App() {
     const [targetSize, setTargetSize] = useState(50)
     const [socket, setSocket] = useState();
     const [opponentScore, setOpponentScore] = useState()
+    const [roomNo, setRoomNo] = useState()
+    const [currentRoom, setCurrentRoom] = useState()
 
     useEffect(() => {
-        setSocket(io('http://localhost:4000/'))
+        // setSocket(io('https://aimracer.herokuapp.com/'))
+        setSocket(io('http://localhost:5000/'))
+
     }, []);
 
     useEffect(() => {
@@ -28,6 +32,9 @@ function App() {
             })
             socket.on('opponentScoreUpdate', (data) =>{
                 setOpponentScore(data.score)
+            })
+            socket.on('roomChanged', (data)=>{
+                setCurrentRoom(data.room)
             })
         }
     }, [socket]);
@@ -49,6 +56,13 @@ function App() {
         }
     }, [score, opponentScore])
 
+    useEffect(()=>{
+        if(roomNo && socket){
+            console.log(roomNo)
+            socket.emit('roomRequest', {room : roomNo})
+        }
+    }, [roomNo, socket])
+
     return (
         <div className="App">
             <Header setShowMenu = {setShowMenu} missCount = {missCount} score = {score} streakCount = {streakCount} />
@@ -56,7 +70,7 @@ function App() {
             <ProgressBar player = {2} score = {opponentScore}/>
             <main className = 'flex-container main'>
                 <Trainer score = {score} numTargets = {numTargets} targetSize = {targetSize} setMissCount = {setMissCount} setScore = {setScore} setStreakCount = {setStreakCount}/>
-                {showMenu && <Menu numTargets = {numTargets} setNumTargets = {setNumTargets} targetSize = {targetSize} setTargetSize = {setTargetSize} />}
+                {showMenu && <Menu currentRoom = {currentRoom} roomNo = {roomNo} setRoomNo = {setRoomNo} numTargets = {numTargets} setNumTargets = {setNumTargets} targetSize = {targetSize} setTargetSize = {setTargetSize} />}
             </main>
         </div>
     );

@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 
 export default function Menu(props){
+    const [localRoomNo, setLocalRoomNo] = useState()
+
     function increaseTargetSize(){
         if(props.targetSize < 90){
             props.setTargetSize(prev => prev + 10)
@@ -35,6 +37,12 @@ export default function Menu(props){
                 <div onClick={decreaseNumTargets} className="btn-primary btn">-</div>
                 <h1 className="num-targets">{props.numTargets}</h1>
                 <div onClick={increaseNumTargets} className="btn-secondary btn">+</div>
+            </div>
+            <div className="roomEntry">
+                <h2>Room Number</h2>
+                <h3>{`Current Room : ${props.currentRoom}`}</h3>
+                <input value = {localRoomNo} onChange={(e)=>setLocalRoomNo(e.target.value)} className="room-input" type = 'text'></input>
+                <div onClick={() => props.setRoomNo(parseInt(localRoomNo))} className="btn-secondary submit btn">Submit</div>
             </div>
         </div>
     )
