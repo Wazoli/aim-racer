@@ -31,37 +31,51 @@ io.on("connection", (socket) => {
         }
     }
     if (!joinedRoom) {
-        let newRoom = 1000 - Object.keys(roomToPlayerCountMap).length;
+        let newRoom = 1000
+        while(roomToPlayerCountMap[newRoom]){
+            newRoom += 1
+        }
         socket.join(newRoom);
         socketToRoomMap[socket.id] = newRoom;
         roomToPlayerCountMap[newRoom] = 1;
     }
-    socket.emit("roomChanged", {room : Array.from(socket.rooms)[1]})
+
+    console.log('connected')
+    console.log(roomToPlayerCountMap)
+
+    socket.emit("roomChanged", {room : socketToRoomMap[socket.id]})
     console.log(Array.from(socket.rooms)[1]);
+
     socket.on("scoreUpdate", (data) => {
         socket.broadcast
             .to(socketToRoomMap[socket.id])
             .emit("opponentScoreUpdate", data);
     });
     socket.on('roomRequest', (data)=>{
+        console.log('before room change')
+        console.log(roomToPlayerCountMap)
+        let currRoom = Array.from(socket.rooms)[1]
         if(!roomToPlayerCountMap[data.room]){
-            let currRoom = Array.from(socket.rooms)[1]
             roomToPlayerCountMap[currRoom] -= 1
             roomToPlayerCountMap[data.room] = 1
-            console.log(roomToPlayerCountMap)
             socketToRoomMap[socket.id] = data.room
+            socket.join(data.room)
             socket.emit("roomChanged", data)
         }
         else if(roomToPlayerCountMap[data.room] < 2){
-            let currRoom = Array.from(socket.rooms)[1]
             roomToPlayerCountMap[currRoom] -= 1
             socketToRoomMap[socket.id] = data.room
             roomToPlayerCountMap[data.room] += 1
+            socket.join(data.room)
             socket.emit("roomChanged", data)
         }
+        console.log('after room change')
+        console.log(roomToPlayerCountMap)
     })
     socket.on("disconnecting", () => {
-        roomToPlayerCountMap[Array.from(socket.rooms)[1]] -= 1;
+        roomToPlayerCountMap[socketToRoomMap[socket.id]] -= 1;
+        console.log('disconnecting')
+        console.log(roomToPlayerCountMap)
     });
     socket.on("disconnect", () => {  
         delete socketToRoomMap[socket.id];

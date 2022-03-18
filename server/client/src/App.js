@@ -21,7 +21,7 @@ function App() {
 
     useEffect(() => {
         // setSocket(io('https://aimracer.herokuapp.com/'))
-        setSocket(io('http://localhost:5000/'))
+        setSocket(io('http://localhost:5000'))
 
     }, []);
 
