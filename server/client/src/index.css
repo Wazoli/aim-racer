@@ -75,9 +75,9 @@ header{
 }
 
 @keyframes fadeIn {
-  0% {opacity: 0%;}
-  75% {opacity: 75%;}
-  76% {opacity: 100%; background-color: white;}
+  0% {opacity: 0%; background-color: white;}
+  75% {opacity: 75%; background-color: white;}
+  76% {opacity: 100%; background-color: red;}
   100%{opacity: 0%; background-color: transparent;}
 }
 
@@ -85,7 +85,7 @@ header{
   width: 90px;
   height: 90px;
   opacity: 0%;
-  background: red;
+  background: white;
   border: 3px solid white;
   animation: fadeIn 0.75s;
   z-index: 1;

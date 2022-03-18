@@ -10,13 +10,13 @@ const flashDuration = 2000 //ms
 const flashCircleDuration = 750 //ms
 
 export default function Trainer(props) {
+
     const [targetEls, setTargetEls] = useState([]);
     const [targets, setTargets] = useState([]);
     const [lastTarget, setLastTarget] = useState(-1);
     const [visibilities, setVisibilities] = useState([]);
     const [flashEl, setFlashEl] = useState();
     const [mouseOnGrid, setMouseOnGrid] = useState(true)
-    const [flashFilterEl, setFlashFilterEl] = useState(undefined)
 
     function targetClicked(e) {
         let id = parseInt(e.target.classList[0]);
@@ -141,8 +141,8 @@ export default function Trainer(props) {
             setTimeout(()=>{
                 //if mouse on grid when flash pops
                 if(document.getElementById('trainer-container').classList[0] === 'true'){
-                    document.getElementById('flash-filter').classList.toggle('flash-filter')
                     setFlashEl(undefined)
+                    document.getElementById('flash-filter').classList.toggle('flash-filter')
                 }
                 else{
                     setTimeout(()=>{

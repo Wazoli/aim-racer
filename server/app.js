@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
     socket.on('roomRequest', (data)=>{
         console.log('before room change')
         console.log(roomToPlayerCountMap)
-        let currRoom = Array.from(socket.rooms)[1]
+        currRoom = socketToRoomMap[socket.id]
         if(!roomToPlayerCountMap[data.room]){
             roomToPlayerCountMap[currRoom] -= 1
             roomToPlayerCountMap[data.room] = 1
