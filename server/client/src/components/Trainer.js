@@ -130,7 +130,7 @@ export default function Trainer(props) {
     useEffect(() => {
         let random = Math.random();
         if(targets.length === props.numTargets - 1){
-            if (random < 0.1 && !flashEl) {
+            if (random < 1 && !flashEl) {
                 watchYourEyes();
             }
         }
@@ -143,19 +143,17 @@ export default function Trainer(props) {
                 if(document.getElementById('trainer-container').classList[0] === 'true'){
                     setFlashEl(undefined)
                     document.getElementById('flash-filter').classList.toggle('flash-filter')
-                }
-                else{
                     setTimeout(()=>{
-                        setFlashEl(undefined)
-                    }, flashCircleDuration - flashPopDelay)
+                        //flash plays through
+                        if(document.getElementById('flash-filter').classList[0] == 'flash-filter'){
+                            document.getElementById('flash-filter').classList.toggle('flash-filter')
+                        }
+                    }, flashDuration)
                 }
             }, flashPopDelay)
             setTimeout(()=>{
-                //flash plays through
-                if(document.getElementById('flash-filter').classList[0] == 'flash-filter'){
-                    document.getElementById('flash-filter').classList.toggle('flash-filter')
-                }
-            }, flashDuration)
+                setFlashEl(undefined)
+            }, flashCircleDuration)
         }
     }, [flashEl])
 
