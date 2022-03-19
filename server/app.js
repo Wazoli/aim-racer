@@ -45,7 +45,6 @@ io.on("connection", (socket) => {
     console.log(roomToPlayerCountMap)
 
     socket.emit("roomChanged", {room : socketToRoomMap[socket.id]})
-    console.log(Array.from(socket.rooms)[1]);
 
     socket.on("scoreUpdate", (data) => {
         socket.broadcast

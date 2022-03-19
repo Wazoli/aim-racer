@@ -18,8 +18,8 @@ function App() {
     const [opponentScore, setOpponentScore] = useState()
     const [roomNo, setRoomNo] = useState()
     const [currentRoom, setCurrentRoom] = useState()
-    const[playerReady, setPlayerReady] = useState(false)
-    const[opponentReady, setOpponentReady] = useState(false)
+    const [playerReady, setPlayerReady] = useState(false)
+    const [opponentReady, setOpponentReady] = useState(false)
 
     useEffect(() => {
         // setSocket(io('https://aimracer.herokuapp.com/'))
@@ -40,9 +40,12 @@ function App() {
             })
             socket.on('playerReady', (data)=>{
                 setOpponentReady(data.playerReady)
+                if(playerReady){
+                    socket.emit('playerReady', {playerReady : playerReady})
+                }
             })
         }
-    }, [socket]);
+    }, [socket, playerReady]);
 
     useEffect(() => {
         if(score && socket){
