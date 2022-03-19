@@ -4,7 +4,6 @@ import Trainer from "./components/Trainer";
 import Header from "./components/Header";
 import Menu from './components/Menu';
 import ProgressBar from "./components/ProgressBar";
-import Ready from "./components/Ready"
 
 const { io } = require("socket.io-client");
 
@@ -19,6 +18,8 @@ function App() {
     const [opponentScore, setOpponentScore] = useState()
     const [roomNo, setRoomNo] = useState()
     const [currentRoom, setCurrentRoom] = useState()
+    const[playerReady, setPlayerReady] = useState(false)
+    const[opponentReady, setOpponentReady] = useState(false)
 
     useEffect(() => {
         // setSocket(io('https://aimracer.herokuapp.com/'))
@@ -36,6 +37,9 @@ function App() {
             })
             socket.on('roomChanged', (data)=>{
                 setCurrentRoom(data.room)
+            })
+            socket.on('playerReady', (data)=>{
+                setOpponentReady(data.playerReady)
             })
         }
     }, [socket]);
@@ -64,14 +68,19 @@ function App() {
         }
     }, [roomNo, socket])
 
+    useEffect(()=>{
+        if(playerReady && socket){
+            socket.emit('playerReady', {playerReady : playerReady})
+        }
+    }, [playerReady, socket])
+
     return (
         <div className="App">
             <Header setShowMenu = {setShowMenu} missCount = {missCount} score = {score} streakCount = {streakCount} />
             <ProgressBar player = {1} score = {score} />
             <ProgressBar player = {2} score = {opponentScore}/>
-            <Ready/>
             <main className = 'flex-container main'>
-                <Trainer score = {score} numTargets = {numTargets} targetSize = {targetSize} setMissCount = {setMissCount} setScore = {setScore} setStreakCount = {setStreakCount}/>
+                <Trainer setPlayerReady = {setPlayerReady} playerReady = {playerReady} opponentReady = {opponentReady} score = {score} numTargets = {numTargets} targetSize = {targetSize} setMissCount = {setMissCount} setScore = {setScore} setStreakCount = {setStreakCount}/>
                 {showMenu && <Menu currentRoom = {currentRoom} roomNo = {roomNo} setRoomNo = {setRoomNo} numTargets = {numTargets} setNumTargets = {setNumTargets} targetSize = {targetSize} setTargetSize = {setTargetSize} />}
             </main>
         </div>

@@ -17,8 +17,14 @@ export default function Trainer(props) {
     const [visibilities, setVisibilities] = useState([]);
     const [flashEl, setFlashEl] = useState();
     const [mouseOnGrid, setMouseOnGrid] = useState(true)
+    const [countdownFinished, setCountdownFinished] = useState(false)
+    const [readyState, setReadyState] = useState()
+    const [firstTargetHit, setFirstTargetHit] = useState(false)
 
     function targetClicked(e) {
+        if(!firstTargetHit){
+            setFirstTargetHit(true)
+        }
         let id = parseInt(e.target.classList[0]);
         setVisibilities((prev) => {
             let result = prev.map((x) => x);
@@ -106,6 +112,28 @@ export default function Trainer(props) {
         setVisibilities(result);
     }, []);
 
+    useEffect(()=>{
+        if(!props.playerReady){
+            setReadyState('Ready')
+        }
+        else if(props.playerReady && !props.opponentReady){
+            setReadyState('Waiting...')
+        }
+        else{
+            let time = 3
+            let countdown = setInterval(()=>{
+                if(time === 0){
+                    setCountdownFinished(true)
+                    clearInterval(countdown)
+                }
+                else{
+                    setReadyState(time)
+                    time--
+                }
+            }, 1000)
+        }
+    }, [props.playerReady, props.opponentReady])
+
     useEffect(() => {
         if (visibilities) {
             prepareGrid();
@@ -130,11 +158,11 @@ export default function Trainer(props) {
     useEffect(() => {
         let random = Math.random();
         if(targets.length === props.numTargets - 1){
-            if (random < 1 && !flashEl) {
+            if (random < 1 && !flashEl && firstTargetHit) {
                 watchYourEyes();
             }
         }
-    }, [targets, props.numTargets, flashEl]);
+    }, [targets, props.numTargets, flashEl, firstTargetHit]);
     
     useEffect(()=>{
         if(flashEl){
@@ -158,11 +186,14 @@ export default function Trainer(props) {
     }, [flashEl])
 
     return (
-        <div onMouseEnter = {(()=>setMouseOnGrid(true))} onMouseLeave = {(()=>setMouseOnGrid(false))} onClick={targetMissed} id = 'trainer-container' className={`${mouseOnGrid} trainer-container`}>
-            <div  id = 'trainer-grid' className="trainer">
+        <div onMouseEnter = {(()=>setMouseOnGrid(true))} onMouseLeave = {(()=>setMouseOnGrid(false))} onClick={countdownFinished && targetMissed} id = 'trainer-container' className={`${mouseOnGrid} trainer-container`}>
+            {countdownFinished ?
+            (<div  id = 'trainer-grid' className="trainer">
                 {targetEls}
                 {flashEl}
-            </div>
+            </div>) 
+            : 
+            (<div onClick={()=>props.setPlayerReady(true)} className='ready-state'>{readyState}</div>)}
             <div id = 'flash-filter'></div>
         </div>
     );

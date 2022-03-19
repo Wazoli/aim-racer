@@ -35,9 +35,15 @@ header{
 
 .trainer-container{
   margin: 0 auto;
+  width : 1340px;
+  height : 740px;
   cursor: crosshair;
   display: flex;
   flex-direction: column;
+  background: #000C66;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
 }
 
 .trainer{
@@ -46,9 +52,7 @@ header{
   min-height: 700px;
   grid-template: repeat(7, 100px) / repeat(13, 100px);
   place-items: center;
-  background: #000C66;
   padding: 20px;
-  border-radius: 50px;
 }
 
 @keyframes flash{
@@ -181,4 +185,14 @@ header{
   font-family: 'Roboto Slab', sans-serif;
   font-size: 20px;
   font-weight: 700;
+}
+
+.ready-state{
+  font-size: 70px;
+  color: white;
+}
+
+.ready-state:hover{
+  color: #d4d4d4;
+  cursor: pointer;
 }

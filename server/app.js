@@ -52,6 +52,7 @@ io.on("connection", (socket) => {
             .to(socketToRoomMap[socket.id])
             .emit("opponentScoreUpdate", data);
     });
+
     socket.on('roomRequest', (data)=>{
         console.log('before room change')
         console.log(roomToPlayerCountMap)
@@ -73,11 +74,19 @@ io.on("connection", (socket) => {
         console.log('after room change')
         console.log(roomToPlayerCountMap)
     })
+
+    socket.on('playerReady', (data)=>{
+        socket.broadcast
+            .to(socketToRoomMap[socket.id])
+            .emit("playerReady", data);
+    })
+
     socket.on("disconnecting", () => {
         roomToPlayerCountMap[socketToRoomMap[socket.id]] -= 1;
         console.log('disconnecting')
         console.log(roomToPlayerCountMap)
     });
+
     socket.on("disconnect", () => {  
         delete socketToRoomMap[socket.id];
     });
