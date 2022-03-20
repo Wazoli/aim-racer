@@ -38,6 +38,9 @@ function App() {
             });
             socket.on("roomChanged", (data) => {
                 setCurrentRoom(data.room);
+                setGameStarted(false)
+                setOpponentReady(false)
+                setPlayerReady(false)
             });
             socket.on("playerReady", (data) => {
                 if (!gameStarted) {
@@ -48,7 +51,7 @@ function App() {
                 setOpponentReady(true);
             });
         }
-    }, [socket, playerReady, opponentReady]);
+    }, [socket]);
 
     useEffect(() => {
         if (score !== undefined && socket) {
