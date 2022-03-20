@@ -20,7 +20,7 @@ function App() {
     const [currentRoom, setCurrentRoom] = useState();
     const [playerReady, setPlayerReady] = useState(false);
     const [opponentReady, setOpponentReady] = useState(false);
-    const [gameStarted, setGameStarted] = useState(false);
+    const [gameStarted, setGameStarted] = useState();
     const [readyState, setReadyState] = useState();
 
     useEffect(() => {
@@ -38,9 +38,9 @@ function App() {
             });
             socket.on("roomChanged", (data) => {
                 setCurrentRoom(data.room);
-                setGameStarted(false)
-                setOpponentReady(false)
-                setPlayerReady(false)
+                setGameStarted(false);
+                setOpponentReady(false);
+                setPlayerReady(false);
             });
             socket.on("playerReady", (data) => {
                 if (!gameStarted) {
@@ -107,28 +107,31 @@ function App() {
         }
     }, [playerReady, opponentReady]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (playerReady === true && opponentReady === true) {
-            console.log('confirming')
+            console.log("confirming");
             socket.emit("confirmReady", {
                 playerReady: playerReady,
             });
         }
-    },[playerReady, opponentReady])
+    }, [playerReady, opponentReady]);
 
-    console.log('player')
+    console.log("player");
     console.log(playerReady);
-    console.log('opponent')
+    console.log("opponent");
     console.log(opponentReady);
 
     return (
         <div className="App">
-            <Header
-                setShowMenu={setShowMenu}
-                missCount={missCount}
-                score={score}
-                streakCount={streakCount}
-            />
+            <div className="header-container">
+                <div className="btn single-btn" onClick={()=>setGameStarted(true)}>Practice</div>
+                <Header
+                    setShowMenu={setShowMenu}
+                    missCount={missCount}
+                    score={score}
+                    streakCount={streakCount}
+                />
+            </div>
             <ProgressBar player={1} score={score} />
             <ProgressBar player={2} score={opponentScore} />
             <main className="flex-container main">

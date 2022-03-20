@@ -196,3 +196,11 @@ header{
   color: #d4d4d4;
   cursor: pointer;
 }
+
+.single-btn{
+  background: #7EC8E3;
+  width: max-content;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 0px
+}
