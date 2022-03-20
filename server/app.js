@@ -80,6 +80,12 @@ io.on("connection", (socket) => {
             .emit("playerReady", data);
     })
 
+    socket.on('confirmReady', (data)=>{
+        socket.broadcast
+            .to(socketToRoomMap[socket.id])
+            .emit("confirmReady", data);
+    })
+
     socket.on("disconnecting", () => {
         roomToPlayerCountMap[socketToRoomMap[socket.id]] -= 1;
         console.log('disconnecting')

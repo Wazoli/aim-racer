@@ -5,25 +5,22 @@ import Flash from "./Flash";
 const totalGridNum = 7 * 13;
 const numRows = 7;
 const numCols = 13;
-const flashPopDelay = 570 //ms
-const flashDuration = 2000 //ms
-const flashCircleDuration = 750 //ms
+const flashPopDelay = 570; //ms
+const flashDuration = 2000; //ms
+const flashCircleDuration = 750; //ms
 
 export default function Trainer(props) {
-
     const [targetEls, setTargetEls] = useState([]);
     const [targets, setTargets] = useState([]);
     const [lastTarget, setLastTarget] = useState(-1);
     const [visibilities, setVisibilities] = useState([]);
     const [flashEl, setFlashEl] = useState();
-    const [mouseOnGrid, setMouseOnGrid] = useState(true)
-    const [countdownFinished, setCountdownFinished] = useState(false)
-    const [readyState, setReadyState] = useState()
-    const [firstTargetHit, setFirstTargetHit] = useState(false)
+    const [mouseOnGrid, setMouseOnGrid] = useState(true);
+    const [firstTargetHit, setFirstTargetHit] = useState(false);
 
     function targetClicked(e) {
-        if(!firstTargetHit){
-            setFirstTargetHit(true)
+        if (!firstTargetHit) {
+            setFirstTargetHit(true);
         }
         let id = parseInt(e.target.classList[0]);
         setVisibilities((prev) => {
@@ -47,11 +44,11 @@ export default function Trainer(props) {
         let targEls = [];
         for (let i = 0; i < totalGridNum; i++) {
             let row = 1 + Math.floor(i / numCols);
-            let col = 1 + ((i) % numCols);
+            let col = 1 + (i % numCols);
             targEls.push(
                 <Target
-                    gridRow = {row}
-                    gridColumn = {col}
+                    gridRow={row}
+                    gridColumn={col}
                     visibility={visibilities[i]}
                     targetSize={props.targetSize}
                     handleClick={targetClicked}
@@ -94,7 +91,7 @@ export default function Trainer(props) {
     function watchYourEyes() {
         let randomFlash = getRandomFreeSpot();
         let row = 1 + Math.floor(randomFlash / numCols);
-        let col = 1 + ((randomFlash) % numCols);
+        let col = 1 + (randomFlash % numCols);
         let style = {
             // height: props.targetSize + "px",
             // width: props.targetSize + "px",
@@ -111,28 +108,6 @@ export default function Trainer(props) {
         }
         setVisibilities(result);
     }, []);
-
-    useEffect(()=>{
-        if(!props.playerReady){
-            setReadyState('Ready')
-        }
-        else if(props.playerReady && !props.opponentReady){
-            setReadyState('Waiting...')
-        }
-        else{
-            let time = 3
-            let countdown = setInterval(()=>{
-                if(time === 0){
-                    setCountdownFinished(true)
-                    clearInterval(countdown)
-                }
-                else{
-                    setReadyState(time)
-                    time--
-                }
-            }, 1000)
-        }
-    }, [props.playerReady, props.opponentReady])
 
     useEffect(() => {
         if (visibilities) {
@@ -157,44 +132,75 @@ export default function Trainer(props) {
 
     useEffect(() => {
         let random = Math.random();
-        if(targets.length === props.numTargets - 1){
-            if (random < 1 && !flashEl && firstTargetHit) {
+        if (targets.length === props.numTargets - 1) {
+            if (random < 0.1 && !flashEl && firstTargetHit) {
                 watchYourEyes();
             }
         }
     }, [targets, props.numTargets, flashEl, firstTargetHit]);
-    
-    useEffect(()=>{
-        if(flashEl){
-            setTimeout(()=>{
+
+    useEffect(() => {
+        if (flashEl) {
+            setTimeout(() => {
                 //if mouse on grid when flash pops
-                if(document.getElementById('trainer-container').classList[0] === 'true'){
-                    setFlashEl(undefined)
-                    document.getElementById('flash-filter').classList.toggle('flash-filter')
-                    setTimeout(()=>{
+                if (
+                    document.getElementById("trainer-container")
+                        .classList[0] === "true"
+                ) {
+                    setFlashEl(undefined);
+                    document
+                        .getElementById("flash-filter")
+                        .classList.toggle("flash-filter");
+                    setTimeout(() => {
                         //flash plays through
-                        if(document.getElementById('flash-filter').classList[0] == 'flash-filter'){
-                            document.getElementById('flash-filter').classList.toggle('flash-filter')
+                        if (
+                            document.getElementById("flash-filter")
+                                .classList[0] === "flash-filter"
+                        ) {
+                            document
+                                .getElementById("flash-filter")
+                                .classList.toggle("flash-filter");
                         }
-                    }, flashDuration)
+                    }, flashDuration);
                 }
-            }, flashPopDelay)
-            setTimeout(()=>{
-                setFlashEl(undefined)
-            }, flashCircleDuration)
+            }, flashPopDelay);
+            setTimeout(() => {
+                setFlashEl(undefined);
+            }, flashCircleDuration);
         }
-    }, [flashEl])
+    }, [flashEl]);
+
+    useEffect(()=>{
+        if(props.score > 1000){
+            setFirstTargetHit(false)
+        }
+        else if(props.opponentScore > 1000){
+            setFirstTargetHit(false)
+        }
+    }, [props.score, props.opponentScore])
 
     return (
-        <div onMouseEnter = {(()=>setMouseOnGrid(true))} onMouseLeave = {(()=>setMouseOnGrid(false))} onClick={countdownFinished && targetMissed} id = 'trainer-container' className={`${mouseOnGrid} trainer-container`}>
-            {countdownFinished ?
-            (<div  id = 'trainer-grid' className="trainer">
-                {targetEls}
-                {flashEl}
-            </div>) 
-            : 
-            (<div onClick={()=>props.setPlayerReady(true)} className='ready-state'>{readyState}</div>)}
-            <div id = 'flash-filter'></div>
+        <div
+            onMouseEnter={() => setMouseOnGrid(true)}
+            onMouseLeave={() => setMouseOnGrid(false)}
+            onClick={props.gameStarted ? targetMissed : (e)=>{}}
+            id="trainer-container"
+            className={`${mouseOnGrid} trainer-container`}
+        >
+            {props.gameStarted ? (
+                <div id="trainer-grid" className="trainer">
+                    {targetEls}
+                    {flashEl}
+                </div>
+            ) : (
+                <div
+                    onClick={() => props.setPlayerReady(true)}
+                    className="ready-state"
+                >
+                    {props.readyState}
+                </div>
+            )}
+            <div id="flash-filter"></div>
         </div>
     );
 }

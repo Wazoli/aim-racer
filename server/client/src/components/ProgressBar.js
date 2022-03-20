@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 export default function ProgressBar(props){
     const [width, setWidth] = useState(0)
     useEffect(()=>{
-        if(props.score > 0){
+        if(props.score >= 0){
             setWidth((props.score / 10000) * 100)
         }
     }, [props.score])
