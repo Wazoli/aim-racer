@@ -41,7 +41,7 @@ export default function Menu(props){
             <div className="roomEntry">
                 <h2>Room Number</h2>
                 <h3>{`Current Room : ${props.currentRoom}`}</h3>
-                <input value = {localRoomNo} onChange={(e)=>setLocalRoomNo(e.target.value)} className="room-input" type = 'text'></input>
+                <input placeholder="New Room Number" value = {localRoomNo} onChange={(e)=>setLocalRoomNo(e.target.value)} className="room-input" type = 'text'></input>
                 <div onClick={() => props.setRoomNo(parseInt(localRoomNo))} className="btn-secondary submit btn">Submit</div>
             </div>
         </div>
