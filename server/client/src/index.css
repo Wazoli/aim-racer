@@ -205,3 +205,31 @@ header{
   border-bottom-left-radius: 0px;
   border-top-right-radius: 0px
 }
+
+.modal-content{
+  display: flex;
+  background:black;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-pic{
+  width: 1000px
+}
+
+.tutorial-btn{
+  color: #7EC8E3;
+  height: fit-content;
+  width: fit-content;
+}
+
+.close-btn{
+  padding: 0.1em;
+  width: fit-content;
+  color: #000C66;
+  font-size: 20px;
+}
+
+.close-btn:hover{
+  color: #7EC8E3;
+}

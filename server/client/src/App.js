@@ -4,6 +4,7 @@ import Trainer from "./components/Trainer";
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 import ProgressBar from "./components/ProgressBar";
+import Tutorial from "./components/Tutorial"
 
 const { io } = require("socket.io-client");
 
@@ -22,6 +23,11 @@ function App() {
     const [opponentReady, setOpponentReady] = useState(false);
     const [gameStarted, setGameStarted] = useState();
     const [readyState, setReadyState] = useState();
+
+    function showDialog(){
+        const dialog = document.getElementById('tutorial-modal')
+        dialog.showModal()
+    }
 
     useEffect(() => {
         // setSocket(io('https://aimracer.herokuapp.com/'))
@@ -90,9 +96,9 @@ function App() {
 
     useEffect(() => {
         if (!playerReady) {
-            setReadyState("Ready");
+            setReadyState("Multiplayer Ready");
         } else if (playerReady && !opponentReady) {
-            setReadyState("Waiting...");
+            setReadyState("Waiting For Another Player...");
         } else if (playerReady && opponentReady) {
             let time = 3;
             let countdown = setInterval(() => {
@@ -123,6 +129,8 @@ function App() {
 
     return (
         <div className="App">
+            <div onClick={showDialog} className="single-btn btn">Tutorial</div>
+            <Tutorial/>
             <div className="header-container">
                 <Header
                     setShowMenu={setShowMenu}
