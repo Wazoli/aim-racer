@@ -30,8 +30,8 @@ function App() {
     }
 
     useEffect(() => {
-        // setSocket(io('https://aimracer.herokuapp.com/'))
-        setSocket(io("http://localhost:5000"));
+        setSocket(io('https://aimracer.herokuapp.com/'))
+        // setSocket(io("http://localhost:5000"));
     }, []);
 
     useEffect(() => {
@@ -96,9 +96,9 @@ function App() {
 
     useEffect(() => {
         if (!playerReady) {
-            setReadyState("Multiplayer Ready");
+            setReadyState("Ready");
         } else if (playerReady && !opponentReady) {
-            setReadyState("Waiting For Another Player...");
+            setReadyState("Waiting For Other Player...");
         } else if (playerReady && opponentReady) {
             let time = 3;
             let countdown = setInterval(() => {
