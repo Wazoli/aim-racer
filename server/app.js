@@ -5,8 +5,8 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        // origin: "http://localhost:3000",
-        origin: 'https://aimracer.herokuapp.com/',
+        origin: "http://localhost:3000",
+        // origin: 'https://aimracer.herokuapp.com/',
         methods: ["GET", "POST"],
     },
 });
@@ -84,6 +84,14 @@ io.on("connection", (socket) => {
         socket.broadcast
             .to(socketToRoomMap[socket.id])
             .emit("confirmReady", data);
+    })
+
+    socket.on('changeTargetSize', (data)=>{
+        socket.broadcast.to(socketToRoomMap[socket.id]).emit('changeTargetSize', data)
+    })
+
+    socket.on('changeNumTargets', (data)=>{
+        socket.broadcast.to(socketToRoomMap[socket.id]).emit('changeNumTargets', data)
     })
 
     socket.on("disconnecting", () => {

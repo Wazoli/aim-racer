@@ -30,8 +30,8 @@ function App() {
     }
 
     useEffect(() => {
-        setSocket(io('https://aimracer.herokuapp.com/'))
-        // setSocket(io("http://localhost:5000"));
+        // setSocket(io('https://aimracer.herokuapp.com/'))
+        setSocket(io("http://localhost:5000"));
     }, []);
 
     useEffect(() => {
@@ -56,8 +56,30 @@ function App() {
             socket.on("confirmReady", (data) => {
                 setOpponentReady(true);
             });
+            socket.on('changeTargetSize', (data)=>{
+                if(data.targetSize !== targetSize){
+                    setTargetSize(data.targetSize)
+                }
+            })
+            socket.on('changeNumTargets', (data)=>{
+                if(data.numTargets !== numTargets){
+                    setNumTargets(data.numTargets)
+                }
+            })
         }
-    }, [socket]);
+    }, [socket, gameStarted, targetSize, numTargets]);
+
+    useEffect(()=>{
+        if(socket){
+            socket.emit('changeTargetSize', {targetSize: targetSize})
+        }
+    }, [targetSize, socket])
+
+    useEffect(()=>{
+        if(socket){
+            socket.emit('changeNumTargets', {numTargets: numTargets})
+        }
+    }, [numTargets, socket])
 
     useEffect(() => {
         if (score !== undefined && socket) {
@@ -114,13 +136,13 @@ function App() {
     }, [playerReady, opponentReady]);
 
     useEffect(() => {
-        if (playerReady === true && opponentReady === true) {
+        if (playerReady === true && opponentReady === true && socket) {
             console.log("confirming");
             socket.emit("confirmReady", {
                 playerReady: playerReady,
             });
         }
-    }, [playerReady, opponentReady]);
+    }, [playerReady, opponentReady, socket]);
 
     console.log("player");
     console.log(playerReady);
