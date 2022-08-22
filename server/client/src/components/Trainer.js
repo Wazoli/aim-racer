@@ -171,10 +171,10 @@ export default function Trainer(props) {
     }, [flashEl]);
 
     useEffect(()=>{
-        if(props.score > 1000){
+        if(props.score > 10000){
             setFirstTargetHit(false)
         }
-        else if(props.opponentScore > 1000){
+        else if(props.opponentScore > 10000){
             setFirstTargetHit(false)
         }
     }, [props.score, props.opponentScore])

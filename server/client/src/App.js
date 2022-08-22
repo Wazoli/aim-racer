@@ -75,10 +75,10 @@ function App() {
   useEffect(() => {
     if (score > 10000) {
       setReadyState("Game Over, You Win :)");
-    } else if (opponentScore > 1000) {
+    } else if (opponentScore > 10000) {
       setReadyState("Game Over, You Lose :(");
     }
-    if (score > 1000 || opponentScore > 1000) {
+    if (score > 10000 || opponentScore > 10000) {
       setScore(0);
       setGameStarted(false);
       setTimeout(() => {
