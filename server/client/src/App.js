@@ -73,7 +73,7 @@ function App() {
   }, [playerReady, socket, gameStarted]);
 
   useEffect(() => {
-    if (score > 1000) {
+    if (score > 10000) {
       setReadyState("Game Over, You Win :)");
     } else if (opponentScore > 1000) {
       setReadyState("Game Over, You Lose :(");
